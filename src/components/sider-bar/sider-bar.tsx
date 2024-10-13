@@ -50,7 +50,7 @@ export const SiderBar: FC<SiderBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'bg-background/70 backdrop-blur-md flex flex-col w-16 h-full flex-shrink-0 transition-all drag',
+        'flex flex-col w-16 h-full flex-shrink-0 transition-all drag',
         isMacOS() && 'pt-5',
         className
       )}
