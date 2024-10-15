@@ -48,7 +48,7 @@ const SettingBtn = () => {
           <span className='icon-[lets-icons--setting-alt-line] w-4 h-4' />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-56' side='right' align='end'>
+      <DropdownMenuContent className='w-56 border-accent/20' side='right' align='end'>
         <DropdownMenuGroup>
           <DropdownMenuItem>
             基础设置

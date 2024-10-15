@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, BaseWindow, BrowserView, WebContentsView } from 'electron';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -29,27 +29,34 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 
 function createWindow() {
-  win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+
+  const baseWin = new BaseWindow({
     width: 832,
     height: 680,
     frame:false,
-    webPreferences: {
+  })
+
+  const mainView = new WebContentsView({
+    webPreferences:{
       preload: path.join(__dirname, 'preload.mjs')
     }
-  });
-
-  // Test active push message to Renderer-process.
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
-
+  })
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL);
+    mainView.webContents.loadURL(VITE_DEV_SERVER_URL);
   } else {
     // win.loadFile('dist/index.html')
-    win.loadFile(path.join(RENDERER_DIST, 'index.html'));
+    mainView.webContents.loadFile(path.join(RENDERER_DIST, 'index.html'));
   }
+  baseWin.contentView.addChildView(mainView)
+  mainView.setBounds({
+    x:0,
+    y:0,
+    width:832,
+    height:680
+  })
+
+  mainView.webContents.openDevTools()
+
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

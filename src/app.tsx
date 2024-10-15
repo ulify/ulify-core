@@ -1,10 +1,11 @@
 import { ThemeProvider } from '@/provider/theme-provider.tsx';
-import { BasicLayout } from '@/basic-layout.tsx';
+import { RouterProvider } from 'react-router-dom';
+import router from '@/routes.tsx';
 
 function App() {
   return (
     <ThemeProvider>
-      <BasicLayout />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }

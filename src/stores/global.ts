@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ActionModeType = 'search' | 'ai';
+export type ActionModeType = 'search' | 'ai'|'plugin';
 
 export interface IGlobalStore {
   actionMode: ActionModeType;

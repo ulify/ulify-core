@@ -6,7 +6,7 @@ export const Ai = () => {
     <div className='flex flex-col gap-4'>
       <div className='flex gap-2'>
         <Button variant='outline'>Ai</Button>
-        <Show when={true} keyed={false}>
+        <Show when={true}>
           <Button variant='outline'>Ai</Button>
         </Show>
       </div>
