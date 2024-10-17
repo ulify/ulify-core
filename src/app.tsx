@@ -1,4 +1,7 @@
 import { App as AntdApp, Avatar, Button, ConfigProvider, Tag, theme } from 'antd';
+import { ThemeProvider } from '@/theme-provider.tsx';
+
+
 
 export const Search = () => {
   return (
@@ -41,11 +44,9 @@ export const ContentWrapper = ()=>{
 
 function App() {
   return (
-    <ConfigProvider theme={{ cssVar: true }} prefixCls='u'>
-      <AntdApp className='app-container'>
-        <Search />
-      </AntdApp>
-    </ConfigProvider>
+    <ThemeProvider>
+      <Search />
+    </ThemeProvider>
   );
 }
 
