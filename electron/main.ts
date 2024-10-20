@@ -1,4 +1,10 @@
-import { app, BrowserWindow, BaseWindow, BrowserView, WebContentsView } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  BaseWindow,
+  BrowserView,
+  WebContentsView
+} from 'electron';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -29,34 +35,37 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 
 function createWindow() {
-
   const baseWin = new BaseWindow({
     width: 832,
     height: 680,
-    frame:false,
-  })
+    frame: false
+  });
 
   const mainView = new WebContentsView({
-    webPreferences:{
+    webPreferences: {
       preload: path.join(__dirname, 'preload.mjs')
     }
-  })
+  });
   if (VITE_DEV_SERVER_URL) {
     mainView.webContents.loadURL(VITE_DEV_SERVER_URL);
   } else {
     // win.loadFile('dist/index.html')
     mainView.webContents.loadFile(path.join(RENDERER_DIST, 'index.html'));
   }
-  baseWin.contentView.addChildView(mainView)
+  baseWin.contentView.addChildView(mainView);
   mainView.setBounds({
-    x:0,
-    y:0,
-    width:832,
-    height:680
-  })
+    x: 0,
+    y: 0,
+    width: 832,
+    height: 680
+  });
 
-  mainView.webContents.openDevTools()
+  mainView.webContents.openDevTools();
 
+  console.log(app.getAppPath());
+  console.log(app.getLocale());
+  console.log(app.getName());
+  console.log(path.resolve('.'));
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
