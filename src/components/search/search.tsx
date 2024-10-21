@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge.tsx';
 
 export const Search = () => {
   return (
-    <div className='h-16 flex justify-between items-center gap-3 px-3'>
+    <div className='h-16 flex justify-between items-center gap-3 px-3 drag'>
       <div className='relative cursor-pointer'>
         <Avatar className='rounded'>
           <AvatarImage

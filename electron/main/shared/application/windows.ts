@@ -6,8 +6,8 @@ import {
   copyFile,
   getDataPath,
   getFilenameWithoutExtension
-} from '@main/utils/fs';
-import { PUBLIC_PATH } from '@config/constants';
+} from '@electron/utils/file';
+import { PUBLIC_PATH } from '@electron/config/constants';
 
 export class WindowsApplication {
   async init() {

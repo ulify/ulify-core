@@ -1,11 +1,12 @@
-import { spawn } from 'node:child_process';
-import fs from 'node:fs';
 import { nativeImage } from 'electron';
-import { getDataPath } from '@main/utils/fs';
-import { PUBLIC_PATH } from '@config/constants';
+import { readdirSync, writeFileSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { getDataPath } from '@electron/utils/file';
+import { PUBLIC_PATH } from '@electron/config/constants';
 
 export class MacosApplication {
   async init() {
+    console.log('init');
     return await this.getApps();
   }
 
@@ -26,7 +27,7 @@ export class MacosApplication {
 
   getSystemPanes() {
     const path = '/System/Library/PreferencePanes';
-    return fs.readdirSync(path).map((file) => {
+    return readdirSync(path).map((file) => {
       return {
         name: file.split('.')[0],
         main: path + '/' + file,
@@ -36,7 +37,6 @@ export class MacosApplication {
   }
 
   formatStringToArrayObj(str: string) {
-    // 按行分割输出，并去除空行
     const lines = str.split('\n').filter((line) => line.trim() !== '');
     const list: Recordable[] = [];
     let item: Recordable = {};
@@ -66,6 +66,7 @@ export class MacosApplication {
 
   async getApplicationDetail(item: IPlugin) {
     try {
+      if(!item.main) return null;
       const image = await nativeImage.createThumbnailFromPath(item.main, {
         width: 48,
         height: 48
@@ -77,8 +78,10 @@ export class MacosApplication {
         return null;
       }
       const dataBuffer = image.toPNG();
-      const iconPath = getDataPath(PUBLIC_PATH + '/image/' + item.name + '.png');
-      fs.writeFileSync(iconPath, dataBuffer);
+      const iconPath = getDataPath(
+        PUBLIC_PATH + '/images/' + item.name + '.png'
+      );
+      writeFileSync(iconPath, dataBuffer);
       return { ...item, logo: iconPath };
     } catch (error) {
       console.log(error);

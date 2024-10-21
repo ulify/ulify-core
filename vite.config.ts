@@ -10,7 +10,20 @@ export default defineConfig({
     electron({
       main: {
         // Shortcut of `build.lib.entry`.
-        entry: 'electron/main.ts'
+        entry: 'electron/main/index.ts',
+        vite: {
+          resolve: {
+            alias: {
+              '@electron': path.resolve(__dirname, './electron/main')
+            }
+          },
+          build: {
+            rollupOptions: {
+              // Here are some C/C++ modules them can't be built properly
+              external: ['sqlite3']
+            }
+          }
+        }
       },
       preload: {
         // Shortcut of `build.rollupOptions.input`.

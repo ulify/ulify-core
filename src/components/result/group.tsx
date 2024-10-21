@@ -16,14 +16,19 @@ export const Group: FC<GroupProps> = ({
   const Item = type === 'vertical' ? VerticalItem : HorizontalItem;
   return (
     <div className='pb-4'>
-      <div className='text-xs text-muted-foreground font-medium pl-2 py-2'>
-        {title}
+      <div className='text-xs text-muted-foreground pl-2 py-2'>
+        <div className='flex justify-start items-center gap-0.5'>
+          <span className='font-extralight'>{title}</span>
+          <span className='font-semibold'>({list.length})</span>
+        </div>
       </div>
       <div className='flex flex-wrap justify-start items-center px-2'>
         {list.map((item, index) => (
           <Item key={index} data={item} />
         ))}
-        {list.length > max && <span className='text-xs text-muted-foreground'>...</span>}
+        {list.length > max && (
+          <span className='text-xs text-muted-foreground'>...</span>
+        )}
       </div>
     </div>
   );
