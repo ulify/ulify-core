@@ -2,11 +2,7 @@ import { app, shell } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import {
-  copyFile,
-  getDataPath,
-  getFilenameWithoutExtension
-} from '@electron/utils/file';
+import { copyFile, getDataPath, getFileName } from '@electron/utils/file';
 import { PUBLIC_PATH } from '@electron/config/constants';
 
 export class WindowsApplication {
@@ -23,46 +19,49 @@ export class WindowsApplication {
       if (path.indexOf('.lnk') === -1) {
         return null;
       }
+      if(!fs.existsSync(path)) return null;
+      console.log(path);
       const detail = shell.readShortcutLink(path);
-      const fileName = getFilenameWithoutExtension(path);
+      const fileName = getFileName(path);
       if (detail.target) {
-        if (detail.icon.indexOf('.ico') === -1) {
+        if (detail.icon && detail.icon.indexOf('.ico') === -1) {
           const nativeImage = await app.getFileIcon(detail.target, {
             size: 'large'
           });
           /**
            * 没有读取到icon文件
            */
-          if (nativeImage.isEmpty()) {
-            return null;
-          }
+          if (nativeImage.isEmpty()) return null;
           const dataBuffer = nativeImage.toPNG();
           const iconPath = getDataPath(
-            PUBLIC_PATH + '/image/' + fileName + '.png'
+            PUBLIC_PATH + '/images/' + fileName + '.png'
           );
-          fs.writeFileSync(iconPath, dataBuffer);
+          console.log('icon----',iconPath);
+          // fs.writeFileSync(iconPath, dataBuffer);
           return {
-            name: fileName,
-            main: detail.target,
-            logo: iconPath
+            title: fileName,
+            target: detail.target,
+            image: iconPath,
+            description: detail.description
           };
         } else {
           const iconPath = getDataPath(
-            PUBLIC_PATH + '/image/' + fileName + '.ico'
+            PUBLIC_PATH + '/images/' + fileName + '.ico'
           );
-          copyFile(detail.icon, iconPath);
+          detail.icon && copyFile(detail.icon, iconPath);
           return {
-            name: fileName,
-            main: detail.target,
-            logo: iconPath
+            title: fileName,
+            target: detail.target,
+            image: iconPath,
+            description: detail.description
           };
         }
       }
       return null;
     } catch (error) {
-      // console.log(error);
+      console.log(error);
+      return null;
     }
-    return null;
   }
 
   /**

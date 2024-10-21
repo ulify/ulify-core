@@ -1,9 +1,13 @@
 import { app } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
+import { RENDERER_DIST } from '@electron/config/common.ts';
 
 export function getDataPath(_path: string) {
-  return path.resolve(app.getPath('sessionData'), ..._path.split('/'));
+  return path.join(path.resolve(
+    app.isPackaged ? app.getPath('userData') : RENDERER_DIST,
+    ..._path.split('/'))
+  );
 }
 
 /**
@@ -11,12 +15,10 @@ export function getDataPath(_path: string) {
  * @param filePath
  */
 export function createDir(filePath: string) {
-  const dirs = filePath.split('/').filter(Boolean);
+  const dirs = filePath.split(path.sep).filter(Boolean);
   dirs.forEach((_dir, index) => {
     const path = dirs.slice(0, index + 1).join('/');
-    console.log(!fs.existsSync(path));
     if (!fs.existsSync(path)) {
-      console.log('================',path);
       fs.mkdirSync(path);
     }
   });
@@ -28,9 +30,12 @@ export function createDir(filePath: string) {
  * @param target 目标路径
  */
 export function copyFile(source: string, target: string) {
-  const readStream = fs.createReadStream(source);
-  const writeStream = fs.createWriteStream(target);
-  readStream.pipe(writeStream);
+  try {
+    const data = fs.readFileSync(source);
+    fs.writeFileSync(target, data);
+  }catch (error){
+    console.log(error);
+  }
 }
 
 /**
@@ -38,5 +43,5 @@ export function copyFile(source: string, target: string) {
  * @param filePath
  */
 export function getFileName(filePath: string) {
-  return filePath.split('.').slice(0, -1).join('.');
+  return path.basename(filePath).replace(/\.[^.]+$/, '');
 }
